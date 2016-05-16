@@ -1,11 +1,14 @@
 #!/bin/bash
 #
 #Check if user is root
+
+#Set Paths
+PATH=/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/bin:/sbin
+#Check for root
 if [ $(id -u) != "0" ]; then
     echo "Error: You must be root to run this script, please use the root user to install the software."
     exit 1
 fi
-
 #--------------------------------------------------------------------------------------------------------------------------------
 # Updated to check if packages are installed to save time
 # What do we need anyway
@@ -30,14 +33,8 @@ SECTION="Basic configuration"
 serverIP=$(ip route get 8.8.8.8 | awk '{ print $NF; exit }')
 set ${serverIP//./ }
 SUBNET="$1.$2.$3."
-#Get host name, commenting out for media server
-# Read full qualified hostname
-#HOSTNAMEFQDN=$(hostname -f)
-#HOSTNAMEFQDN=$(whiptail --inputbox "\nWhat is your full qualified hostname for $serverIP ?" 10 78 $HOSTNAMEFQDN --title "$SECTION" 3>&1 1>&2 2>&3)
-#exitstatus=$?; if [ $exitstatus = 1 ]; then exit 1; fi
-#set ${HOSTNAMEFQDN//./ }
-#HOSTNAMESHORT="$1"
 
+#Begin installer scripts
 whiptail --title "Welcome to the Media Server Installation Script" --msgbox "This Debian Wheezy/Jessie and Ubuntu installer will prompt for valid users and ports, defaults are suggested in () for those in doubt" 8 78
 
 source "functions.sh"
