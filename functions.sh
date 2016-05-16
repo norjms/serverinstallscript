@@ -92,6 +92,36 @@ install_rutorrent () {
 #--------------------------------------------------------------------------------------------------------------------------------
 debconf-apt-progress -- apt-get install mysql-server mysql-client nginx php5-fpm php5-dev php5-mysql php5-dev -y
 apt-get -y install autoconf build-essential ca-certificates comerr-dev curl cfv dtach htop irssi libcloog-ppl-dev libcppunit-dev libcurl3 libncurses5-dev libterm-readline-gnu-perl libsigc++-2.0-dev libperl-dev libtool libxml2-dev ncurses-base ncurses-term ntp patch pkg-config php7.0 php7.0-cli php7.0-dev php7.0-fpm php7.0-curl php7.0-mcrypt php7.0-xmlrpc php7.0-json pkg-config python-scgi git screen subversion texinfo unrar-free unzip zlib1g-dev libcurl4-openssl-dev mediainfo -y
+#Change open file limits
+sudo sed -i '/# End of file/ i\* hard nofile 32768\n* soft nofile 32768\n' /etc/security/limits.conf
+SERVERIP=$(ip route get 8.8.8.8 | awk 'NR==1 {print $NF}')
+cd ~
+mkdir source
+cd source
+svn co https://svn.code.sf.net/p/xmlrpc-c/code/stable xmlrpc
+curl http://rtorrent.net/downloads/libtorrent-0.13.6.tar.gz | tar xz
+curl http://rtorrent.net/downloads/rtorrent-0.9.6.tar.gz | tar xz
+#Install xmlrpc
+cd xmlrpc
+./configure --prefix=/usr --enable-libxml2-backend --disable-libwww-client --disable-wininet-client --disable-abyss-server --disable-cg
+make
+make install
+#Making libtorrent
+cd ../libtorrent-0.13.6
+./autogen.sh
+./configure --prefix=/usr
+make -j2
+make install
+#Making rtorrent
+cd ../rtorrent-0.9.6
+./autogen.sh
+./configure --prefix=/usr --with-xmlrpc-c
+make -j2
+make install
+ldconfig
+#Making directories
+cd ~ && mkdir rtorrent && cd rtorrent
+mkdir .session downloads watch
 echo "rutorrent Installed"
 }
 
