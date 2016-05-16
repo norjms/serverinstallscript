@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# (c) Igor Pecovnik
+# (c) James Norman
 # 
 #get ip
 showip=$(ifconfig eth0 | awk -F"[: ]+" '/inet addr:/ {print $4}')
