@@ -969,8 +969,10 @@ install_kodi (){
 #--------------------------------------------------------------------------------------------------------------------------------
 
 if ! uname -a | grep raspberrypi > /dev/null; then
-echo not Raspberry Pi...
-exit 1
+apt-get install software-properties-common -y
+add-apt-repository ppa:team-xbmc/ppa --allow-yes
+apt-get update
+apt-get install kodi -y
 else
     rm /etc/apt/sources.list.d/mene.list
 cat > /etc/apt/sources.list.d/mene.list <<EOF
